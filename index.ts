@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import 'dotenv/config';
 
-
 // custom imports
 import cuponRouter from './src/routes/cupon.route.js';
 
