@@ -4,7 +4,8 @@ const cuponRouter = express.Router();
 import CuponModel from '../models/cupon.model.js';
 
 cuponRouter.get('/', async (req: Request, res: Response)=> {
-    let {page, limit, cupon_code, title} = req.query;  
+    let {page, limit, cupon_code, title} = req.query;
+
     try{
         if(Object.keys(req.query).length>0){
             let data = await CuponModel.find({$or: [{cuponCode: cupon_code}, {title: title}]}).skip(page).limit(limit);

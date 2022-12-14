@@ -13,7 +13,7 @@ import CuponModel from '../models/cupon.model.js';
 cuponRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { page, limit, cupon_code, title } = req.query;
     try {
-        if (Object.keys(req.query).length > 0) {
+        if (Object.keys(req.query).length >= 4) {
             let data = yield CuponModel.find({ $or: [{ cuponCode: cupon_code }, { title: title }] }).skip(page).limit(limit);
             let count = yield CuponModel.find({ $or: [{ cuponCode: cupon_code }, { title: title }] }).count();
             res.status(200).send({ totalCount: count, data: data });
