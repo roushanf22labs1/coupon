@@ -39,8 +39,7 @@ cuponRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 }));
 cuponRouter.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let deletedData = yield CuponModel.deleteOne({ id: req.params.id });
-        console.log(deletedData);
+        let deletedData = yield CuponModel.findByIdAndDelete(req.params.id);
         res.status(202).send({ message: 'coupon deleted successfully', data: deletedData });
     }
     catch (_c) {

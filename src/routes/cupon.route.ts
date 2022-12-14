@@ -32,8 +32,7 @@ cuponRouter.post('/', async (req: Request, res: Response)=> {
 
 cuponRouter.delete('/:id', async (req: Request, res: Response)=> {
     try{
-        let deletedData = await CuponModel.deleteOne({id: req.params.id});
-        console.log(deletedData);
+        let deletedData = await CuponModel.findByIdAndDelete(req.params.id);
         res.status(202).send({message: 'coupon deleted successfully', data: deletedData});
     }catch{
         res.status(204).send({message: 'error while deleting'});
