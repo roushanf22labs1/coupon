@@ -3,19 +3,34 @@ import express, {Request, Response} from 'express';
 const cuponRouter = express.Router();
 import CuponModel from '../models/cupon.model.js';
 
-cuponRouter.get('/', async (req: Request, res: Response)=> {
-    let {page, limit, cupon_code, title} = req.query;
+cuponRouter.get('/:id', async (req: Request, res: Response)=> {
+    try{        
+        let data = CuponModel.find(parseInt(req.params.id));
+        let count = CuponModel.find(parseInt(req.params.id)).count();
+        res.status(200).send({totalCount: count, data: data});    
+   }catch{
+     res.status(204).send({message: 'data not found'});
+   }
+});
 
+cuponRouter.get('/', async (req: Request, res: Response)=> {
+    let {page, limit} = req.query;       
     try{
-        if(Object.keys(req.query).length>0){
-            let data = await CuponModel.find({$or: [{cuponCode: cupon_code}, {title: title}]}).skip(page).limit(limit);
-            let count = await CuponModel.find({$or: [{cuponCode: cupon_code}, {title: title}]}).count();
-            res.status(200).send({totalCount: count, data: data});
-        }else{
-            let data = await CuponModel.find().skip(page).limit(limit);
+        if(Object.keys(req.query).length==0){
+            let data = await CuponModel.find();
             let count = await CuponModel.find().count();
-            res.status(200).send({totalCount: count, data: data});
-        }     
+            res.status(200).send({totalCount: count, data: data}); 
+        }else if(Object.keys(req.query).length===2 && req.query.page && req.query.limit){
+            let data = await CuponModel.find({}).skip((parseInt(page-1) * parseInt(limit))).limit(parseInt(limit));
+            let count = await CuponModel.find({}).count();
+            res.status(200).send({totalCount: count, data: data});             
+        }else if(Object.keys(req.query).length>2){
+            delete req.query.page;
+            delete req.query.limit;
+            let data = await CuponModel.find(req.query).skip((parseInt(page-1) * parseInt(limit))).limit(parseInt(limit));
+            let count = await CuponModel.find(req.query).skip((parseInt(page-1) * parseInt(limit))).limit(parseInt(limit)).count();
+            res.status(200).send({totalCount: count, data: data}); 
+        }            
    }catch{
      res.status(204).send({message: 'data not found'});
    }
